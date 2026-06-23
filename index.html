@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>食欲解禁｜とんかつ</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+/* ===== 案C：和の craft（和紙・落款・縦書き）===== */
+.wrap{ max-width:var(--maxw); margin:0 auto;
+  background-color:var(--paper);
+  background-image:
+    radial-gradient(circle at 20% 10%, rgba(194,160,92,.10), transparent 45%),
+    radial-gradient(circle at 85% 70%, rgba(168,85,31,.07), transparent 40%),
+    repeating-linear-gradient(0deg, rgba(120,95,55,.035) 0 2px, transparent 2px 5px);
+}
+
+/* 落款印 */
+.seal{ width:54px; height:54px; border-radius:8px; background:var(--seal);
+  color:#fff; display:flex; align-items:center; justify-content:center;
+  font-family:"Zen Old Mincho",serif; font-weight:700; font-size:13px;
+  line-height:1.05; text-align:center; letter-spacing:.05em;
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,.35); transform:rotate(-3deg);
+  writing-mode:vertical-rl; }
+
+/* 筆の区切り */
+.brush{ height:14px; background:var(--ink); width:74%; margin:0 auto;
+  border-radius:60% 40% 55% 45% / 60% 55% 45% 40%; opacity:.85;
+  transform:rotate(-.6deg); }
+.brush.sm{ height:9px; width:46px; margin:0; }
+
+/* ヘッダー（暖簾風） */
+.hdr{ position:sticky; top:0; z-index:30; display:flex; align-items:center;
+  justify-content:space-between; padding:12px 20px; background:var(--brown);
+  border-bottom:3px solid var(--seal); }
+.hdr .mark{ color:var(--cream); font-weight:700; font-size:18px; letter-spacing:.22em; }
+.hdr .tel{ font-family:"Noto Sans JP",sans-serif; font-size:11px; color:var(--cream);
+  text-decoration:none; border:1px solid var(--gold); border-radius:3px; padding:7px 13px;
+  white-space:nowrap; }
+
+/* ヒーロー（中央揃え） */
+.hero{ padding:52px 26px 56px; position:relative; text-align:center; }
+.hero .kicker{ display:block; font-family:"Noto Sans JP",sans-serif;
+  font-size:11px; letter-spacing:.4em; color:var(--terra); margin:0 0 26px; }
+.hero h1{ font-family:"Zen Old Mincho",serif; font-weight:900;
+  font-size:clamp(40px,13vw,66px); margin:0; letter-spacing:.08em;
+  line-height:1.1; color:var(--seal);
+  writing-mode:vertical-rl; text-orientation:upright; display:inline-block; }
+.hero .romaji{ display:block; font-family:"Noto Sans JP",sans-serif;
+  font-size:10px; letter-spacing:.46em; color:var(--ink-soft); margin:16px 0 0; }
+.hero .orn-row{ display:flex; align-items:center; justify-content:center;
+  gap:14px; margin:22px 0 0; }
+.hero .orn-row .ln{ width:54px; height:1px; background:var(--gold); }
+.hero .orn-row .dot{ width:8px; height:8px; background:var(--seal);
+  transform:rotate(45deg); box-shadow:inset 0 0 0 1px rgba(255,255,255,.3); }
+.hero-img{ height:300px; margin-top:34px; border-radius:4px; overflow:hidden;
+  box-shadow:0 10px 30px rgba(58,42,26,.18); }
+.hero-img video{ width:100%; height:100%; object-fit:cover; display:block; }
+.hero .lead{ font-size:15px; color:var(--ink-soft); margin:28px auto 0;
+  line-height:2.2; max-width:30em; }
+
+/* セクション */
+.sec{ padding:56px 26px; position:relative; }
+.sec.warm{ background:rgba(168,85,31,.05); }
+.shead{ display:flex; align-items:center; gap:16px; margin:0 0 38px; }
+.shead .ttl{ writing-mode:horizontal-tb; font-size:27px; font-weight:700;
+  letter-spacing:.16em; margin:0; }
+.shead .en{ font-family:"Noto Sans JP",sans-serif; font-size:10px;
+  letter-spacing:.34em; color:var(--terra); }
+
+/* こだわり：朱印付きカード */
+.kd{ position:relative; background:rgba(255,255,255,.45);
+  border:1px solid var(--line); border-radius:6px; padding:22px 22px 24px;
+  margin-bottom:26px; }
+.kd .pic{ height:180px; border-radius:4px; margin:-22px -22px 18px; border-bottom:1px solid var(--line); }
+.kd .pic video{ width:100%; height:100%; object-fit:cover; display:block; }
+.kd .pic img{ width:100%; height:100%; object-fit:cover; display:block; }
+/* 動画枠：写真枠と同じ寸法。mp4差し込み前のプレースホルダ表示 */
+.vid-slot{ position:relative; overflow:hidden; background:var(--brown-deep);
+  background-image:
+    repeating-linear-gradient(45deg, rgba(255,255,255,.03) 0 12px, transparent 12px 24px); }
+.vid-slot video{ width:100%; height:100%; object-fit:cover; display:block; }
+/* 引きめ：映像全体を見せる（トリミングせず余白は濃茶で埋める） */
+.kd .pic.vid-contain{ height:300px; }
+.kd .pic.vid-contain video{ object-fit:contain; background:var(--brown-deep); }
+.vid-slot[data-label]::after{ content:attr(data-label);
+  position:absolute; left:50%; bottom:14px; transform:translateX(-50%);
+  font-family:ui-monospace,Menlo,monospace; font-size:10.5px; line-height:1.4;
+  color:#e7d9bd; background:rgba(36,25,16,.78); border:1px solid rgba(194,160,92,.4);
+  padding:6px 12px; border-radius:3px; max-width:86%; text-align:center; }
+.vid-badge{ position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  width:62px; height:62px; border-radius:50%; background:rgba(178,58,38,.92);
+  color:#fff; font-size:13px; box-shadow:0 6px 20px rgba(0,0,0,.35); }
+.kd .row{ display:flex; align-items:flex-start; gap:14px; }
+.kd .no{ font-family:"Zen Old Mincho",serif; writing-mode:vertical-rl;
+  font-size:22px; color:var(--seal); font-weight:700; letter-spacing:.1em;
+  border-right:1px solid var(--line); padding-right:12px; }
+.kd h3{ font-size:21px; font-weight:700; margin:0 0 10px; letter-spacing:.05em; }
+.kd p{ font-size:14px; color:var(--ink-soft); margin:0; line-height:1.95; }
+
+/* メニュー：御品書き（カテゴリー・罫線・価格） */
+.menu{ background:rgba(255,255,255,.4); border:1px solid var(--line);
+  border-radius:6px; padding:6px 24px 16px; }
+.mcat{ display:flex; align-items:center; gap:12px; margin:24px 0 2px; }
+.mcat:first-child{ margin-top:10px; }
+.mcat .jp{ font-family:"Zen Old Mincho",serif; font-size:18px; font-weight:700;
+  color:var(--seal); letter-spacing:.18em; white-space:nowrap; }
+.mcat .ln{ flex:1; height:1px; background:var(--line); }
+.mi{ display:flex; justify-content:space-between; align-items:center; gap:14px;
+  padding:13px 2px; border-bottom:1px dotted var(--line); }
+.mi:last-child{ border-bottom:0; }
+.mi-l{ display:flex; align-items:center; gap:14px; min-width:0; }
+.mthumb{ width:54px; height:54px; flex:0 0 54px; border-radius:4px; object-fit:cover;
+  display:block; box-shadow:0 2px 7px rgba(58,42,26,.18); }
+.mi .nm{ font-size:16px; font-weight:700; letter-spacing:.03em; }
+.mi .price-col{ text-align:right; white-space:nowrap; }
+.mi .pr{ font-family:"Zen Old Mincho",serif; font-size:18px; color:var(--seal);
+  font-weight:700; }
+.mi .half{ display:block; font-family:"Noto Sans JP",sans-serif; font-size:11px;
+  color:var(--ink-soft); margin-top:3px; }
+.mnote{ font-family:"Noto Sans JP",sans-serif; font-size:11.5px; color:var(--ink-soft);
+  margin:16px 0 0; letter-spacing:.04em; }
+
+/* 食べ方：縦書き番号 */
+.steps{ display:flex; flex-direction:column; gap:0; }
+.st{ display:flex; gap:18px; padding:20px 0; border-bottom:1px solid var(--line); }
+.st .n{ font-family:"Zen Old Mincho",serif; writing-mode:vertical-rl; font-size:24px;
+  color:var(--seal); font-weight:700; flex:0 0 auto; }
+.st h3{ font-size:16px; font-weight:700; margin:0 0 5px; }
+.st .best{ font-family:"Noto Sans JP",sans-serif; font-size:10px;
+  background:var(--seal); color:#fff; border-radius:3px; padding:2px 8px; margin-left:8px; }
+.st p{ font-size:13px; color:var(--ink-soft); margin:0; }
+
+/* 予約 */
+.reserve{ background:var(--brown); color:var(--cream); text-align:center; }
+.reserve .shead{ justify-content:center; }
+.reserve .ttl{ color:var(--cream); }
+.reserve .en{ color:var(--gold-soft); }
+.reserve .lead{ font-size:14px; color:#d9cdb8; margin:0 0 26px; }
+.btns{ display:flex; flex-direction:column; gap:12px; max-width:340px; margin:0 auto; }
+.b-tel{ background:var(--cream); color:var(--brown); }
+.b-tel .num{ font-family:"Zen Old Mincho",serif; font-size:22px; font-weight:700;
+  white-space:nowrap; }
+.b-line{ background:#06c755; color:#fff; font-family:"Noto Sans JP",sans-serif; }
+
+/* アクセス/募集 */
+.info{ background:rgba(255,255,255,.45); border:1px solid var(--line);
+  border-radius:6px; overflow:hidden; }
+.info .row{ display:flex; border-bottom:1px solid var(--line); }
+.info .row:last-child{ border-bottom:0; }
+.info dt{ flex:0 0 90px; background:rgba(168,85,31,.08); padding:14px 15px; margin:0;
+  font-family:"Noto Sans JP",sans-serif; font-size:12px; letter-spacing:.1em; color:var(--ink-soft); }
+.info dd{ flex:1; padding:14px 15px; margin:0; font-size:14px; }
+.info dd b{ color:var(--seal); }
+.map{ margin-top:22px; border-radius:6px; overflow:hidden; border:1px solid var(--line); }
+.map iframe{ display:block; width:100%; height:280px; border:0; }
+.note{ font-size:12.5px; color:var(--ink-soft); margin:16px 0 22px; }
+.b-line.wide{ max-width:340px; margin:0 auto; }
+
+.ft{ background:var(--brown-deep); color:#c1b196; text-align:center; padding:46px 26px; }
+.ft .seal{ margin:0 auto 18px; }
+.ft .nm{ font-size:22px; font-weight:700; letter-spacing:.22em; color:var(--cream); margin:0 0 10px; }
+.ft p{ font-size:12px; margin:4px 0; }
+.ft .sns{ display:flex; gap:18px; justify-content:center; margin-top:20px;
+  font-family:"Noto Sans JP",sans-serif; font-size:12px; letter-spacing:.12em; }
+.ft .sns a{ text-decoration:none; color:var(--gold-soft); }
+</style>
+</head>
+<body>
+<div class="wrap" data-screen-label="案C 和のcraft">
+
+  <header class="hdr">
+    <div class="mark">食欲解禁</div>
+    <a class="tel" href="tel:0987555458">予約 0987-55-5458</a>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <span class="kicker">都城・はざま牧場 きなこ豚</span>
+    <h1>「食欲解禁」</h1>
+    <span class="romaji">SHOKUYOKU KAIKIN ・ TONKATSU</span>
+    <div class="orn-row"><span class="ln"></span><span class="dot"></span><span class="ln"></span></div>
+    <div class="hero-img">
+      <video src="media/hero.mp4" autoplay muted loop playsinline></video>
+    </div>
+    <p class="lead">臭みのない肉厚を、低温でじっくり。<br>顎の弱い方にもやさしい、やわらかな一枚を、<br>串間の地から。</p>
+  </section>
+
+  <div class="brush"></div>
+
+  <!-- こだわり -->
+  <section class="sec" data-screen-label="こだわり">
+    <div class="shead"><h2 class="ttl">お店のこだわり</h2><span class="en">ABOUT</span></div>
+    <article class="kd">
+      <div class="pic"><img src="media/kinako-pork.jpg" alt="きなこ豚の生肉"></div>
+      <div class="row"><div class="no">其の一</div><div><h3>きなこ豚のこと</h3>
+        <p>都城・はざま牧場で育てられた「きなこ豚」。臭みがなく、澄んだ甘みとしっかりとした旨みが特長。上質な素材の力を一皿に最大限に活かしています。</p></div></div>
+    </article>
+    <article class="kd">
+      <div class="pic vid-slot">
+        <video src="media/age.mp4" autoplay muted loop playsinline></video>
+      </div>
+      <div class="row"><div class="no">其の二</div><div><h3>低温揚げの技術</h3>
+        <p>低温でじっくり揚げることで、旨みと肉汁を外に逃さずジューシーさと柔らかさを最大限に引き出します。肉本来のおいしさをそのままお届けするのがこだわりです。</p></div></div>
+    </article>
+    <article class="kd">
+      <div class="pic"><img src="media/interior.jpg" alt="落ち着いた座敷の店内"></div>
+      <div class="row"><div class="no">其の三</div><div><h3>ゆっくり過ごせる空間</h3>
+        <p>慌ただしい日常から離れ、落ち着いた時間の中でとんかつをご堪能ください。ちょっと贅沢したいあの日に、ぜひお越しください。</p></div></div>
+    </article>
+    <article class="kd" style="margin-bottom:0">
+      <div class="pic"><img src="media/sunrise.jpg" alt="串間の朝日・里山の風景"></div>
+      <div class="row"><div class="no">其の四</div><div><h3>宮崎の食文化を守る</h3>
+        <p>地元・串間に根付いた食文化を大切に。地域の生産者と繋がりながら、日々の一皿に誇りを込めています。</p></div></div>
+    </article>
+  </section>
+
+  <div class="brush"></div>
+
+  <!-- メニュー -->
+  <section class="sec warm" data-screen-label="メニュー">
+    <div class="shead"><h2 class="ttl">御品書き</h2><span class="en">MENU</span></div>
+    <div class="menu">
+      <div class="mcat"><span class="jp">定食</span><span class="ln"></span></div>
+      <div class="mi"><div class="mi-l"><img class="mthumb" src="media/menu-rosu.jpg" alt="豚ロースカツ"><span class="nm">豚ロースカツ</span></div><span class="price-col"><span class="pr">¥1,860</span><span class="half">ハーフ ¥1,480</span></span></div>
+      <div class="mi"><div class="mi-l"><img class="mthumb" src="media/menu-jyorosu.jpg" alt="豚上ロースカツ"><span class="nm">豚上ロースカツ</span></div><span class="price-col"><span class="pr">¥1,960</span></span></div>
+      <div class="mi"><div class="mi-l"><img class="mthumb" src="media/menu-hire.jpg" alt="豚ヒレカツ"><span class="nm">豚ヒレカツ</span></div><span class="price-col"><span class="pr">¥1,940</span></span></div>
+      <div class="mi"><div class="mi-l"><img class="mthumb" src="media/menu-ebi.jpg" alt="海老フライ"><span class="nm">海老フライ</span></div><span class="price-col"><span class="pr">¥1,680</span></span></div>
+      <div class="mi"><div class="mi-l"><span class="nm">豚ロースと海老フライ</span></div><span class="price-col"><span class="pr">¥2,160</span><span class="half">ハーフ ¥1,860</span></span></div>
+      <div class="mi"><div class="mi-l"><span class="nm">豚上ロースと海老フライ</span></div><span class="price-col"><span class="pr">¥2,290</span></span></div>
+      <div class="mi"><div class="mi-l"><span class="nm">豚ヒレと海老フライ</span></div><span class="price-col"><span class="pr">¥2,270</span></span></div>
+      <div class="mi"><div class="mi-l"><span class="nm">生姜焼き</span></div><span class="price-col"><span class="pr">¥1,680</span></span></div>
+
+      <div class="mcat"><span class="jp">丼</span><span class="ln"></span></div>
+      <div class="mi"><div class="mi-l"><span class="nm">はみでるカツ</span></div><span class="price-col"><span class="pr">¥1,860</span><span class="half">ハーフ ¥1,480</span></span></div>
+      <div class="mi"><div class="mi-l"><span class="nm">極太えびプリ丼</span></div><span class="price-col"><span class="pr">¥1,580</span></span></div>
+    </div>
+    <p class="mnote">※価格はすべて税込です。</p>
+  </section>
+
+  <div class="brush"></div>
+
+  <!-- 食べ方 -->
+  <section class="sec" data-screen-label="おいしい食べ方">
+    <div class="shead"><h2 class="ttl">おいしい食べ方</h2><span class="en">HOW TO EAT</span></div>
+    <div class="steps">
+      <div class="st"><div class="n">壱</div><div><h3>まずはそのままひと口</h3><p>揚げたての衣のサクサク感と肉汁をそのままで。</p></div></div>
+      <div class="st"><div class="n">弐</div><div><h3>お塩で<span class="best">一番おすすめ</span></h3><p>味の薄い順から。きなこ豚本来の甘みと旨みが際立ちます。</p></div></div>
+      <div class="st"><div class="n">参</div><div><h3>串間産 刺身醤油で</h3><p>地元・串間産の刺身醤油をひとつけ。豚のうまみを引き立てます。</p></div></div>
+      <div class="st"><div class="n">四</div><div><h3>特製とんかつソースで</h3><p>オリジナルソースで。ご飯との相性も最高。</p></div></div>
+      <div class="st"><div class="n">伍</div><div><h3>お出汁で〆る</h3><p>やさしい旨みの中にとんかつの余韻が溶け合う上品な締めくくり。</p></div></div>
+    </div>
+  </section>
+
+  <!-- 予約 -->
+  <section class="sec reserve" data-screen-label="ご予約">
+    <div class="shead"><h2 class="ttl">ご予約</h2><span class="en">RESERVE</span></div>
+    <p class="lead">お席のご予約はお電話、またはLINEから承ります。</p>
+    <div class="btns">
+      <a class="cta b-tel" href="tel:0987555458"><span class="num">0987-55-5458</span></a>
+      <a class="cta b-line" href="https://lin.ee/RGmxOLj" target="_blank" rel="noopener">LINEで予約する</a>
+    </div>
+  </section>
+
+  <!-- アクセス -->
+  <section class="sec" data-screen-label="アクセス">
+    <div class="shead"><h2 class="ttl">アクセス</h2><span class="en">ACCESS</span></div>
+    <dl class="info">
+      <div class="row"><dt>店名</dt><dd>食欲解禁（とんかつ）</dd></div>
+      <div class="row"><dt>住所</dt><dd>宮崎県串間市大字西方6593番地4</dd></div>
+      <div class="row"><dt>営業時間</dt><dd>昼 11:00〜14:00／夜 18:00〜22:00</dd></div>
+      <div class="row"><dt>定休日</dt><dd>毎週木曜日／第1・3・5週の水曜</dd></div>
+    </dl>
+    <div class="map">
+      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3403.2810672729397!2d131.22834!3d31.461453599999995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x353ecd76280e39b7%3A0x77423aa991b6f1d7!2z6aOf5qyy6Kej56aB!5e0!3m2!1sja!2sjp!4v1780025208778!5m2!1sja!2sjp" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+  </section>
+
+  <div class="brush"></div>
+
+  <!-- 募集 -->
+  <section class="sec warm" data-screen-label="スタッフ募集">
+    <div class="shead"><h2 class="ttl">スタッフ募集</h2><span class="en">RECRUIT</span></div>
+    <dl class="info">
+      <div class="row"><dt>時給</dt><dd><b>1,023円〜</b></dd></div>
+      <div class="row"><dt>勤務時間</dt><dd>10:00〜14:00／11:00〜15:00<br>17:00〜21:00／18:00〜22:00</dd></div>
+      <div class="row"><dt>仕事内容</dt><dd>ホール・キッチン業務（未経験歓迎）</dd></div>
+    </dl>
+    <p class="note">まずはお気軽に。ご応募・ご質問はLINEからどうぞ。</p>
+    <a class="cta b-line wide" href="https://lin.ee/RGmxOLj" target="_blank" rel="noopener">LINEで応募する</a>
+  </section>
+
+  <footer class="ft">
+    <div class="seal">食欲解禁</div>
+    <p class="nm">食欲解禁</p>
+    <p>宮崎県串間市大字西方6593番地4</p>
+    <p>TEL 0987-55-5458</p>
+    <div class="sns"><a href="#">Instagram</a><a href="#">食べログ</a><a href="#">Google</a></div>
+  </footer>
+
+</div>
+</body>
+</html>
